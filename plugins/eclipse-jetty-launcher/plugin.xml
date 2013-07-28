@@ -7,7 +7,7 @@
             delegate="net.sourceforge.eclipsejetty.launch.JettyLaunchConfigurationDelegate"
             id="net.sourceforge.eclipsejetty.launchConfigurationType"
             modes="run, debug"
-            name="Jetty Webapp"
+            name="Servlet Webapp"
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
             sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer">
       </launchConfigurationType>

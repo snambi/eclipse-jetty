@@ -116,6 +116,12 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
                 chooseJavaProject();
             }
         });
+        
+        
+        final Group containerGroup = new Group(tabComposite, SWT.NONE);
+        containerGroup.setLayout(new GridLayout(2, false));
+        containerGroup.setLayoutData( new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+        containerGroup.setText("Choose Servlet Container:");
 
         final Group applicationGroup = new Group(tabComposite, SWT.NONE);
         applicationGroup.setLayout(new GridLayout(3, false));
