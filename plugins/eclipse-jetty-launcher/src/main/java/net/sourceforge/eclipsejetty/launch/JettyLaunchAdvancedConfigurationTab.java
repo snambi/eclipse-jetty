@@ -95,34 +95,34 @@ public class JettyLaunchAdvancedConfigurationTab extends AbstractJettyLaunchConf
         tabComposite = new Composite(parent, SWT.NONE);
         tabComposite.setLayout(new GridLayout(1, false));
 
-        final Group jettyGroup = new Group(tabComposite, SWT.NONE);
-        jettyGroup.setLayout(new GridLayout(4, false));
-        jettyGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-        jettyGroup.setText("Jetty:");
-
-        embeddedButton =
-            createButton(jettyGroup, SWT.RADIO, "Use Jetty provided by launcher plugin (Jetty 7.x)", -1, 4, 1,
-                modifyDialogListener);
-        externButton = createButton(jettyGroup, SWT.RADIO, "Use Jetty at path:", 128, 1, 1, modifyDialogListener);
-        pathText = createText(jettyGroup, SWT.BORDER, -1, -1, 3, 1, modifyDialogListener);
-
-        createLabel(jettyGroup, "", -1, 2, 1);
-        pathVariablesButton = createButton(jettyGroup, SWT.NONE, "Variables...", 96, 1, 1, new SelectionAdapter()
-        {
-            @Override
-            public void widgetSelected(SelectionEvent e)
-            {
-                chooseJettyPathVariable();
-            }
-        });
-        pathBrowseButton = createButton(jettyGroup, SWT.NONE, "Browse...", 96, 1, 1, new SelectionAdapter()
-        {
-            @Override
-            public void widgetSelected(final SelectionEvent e)
-            {
-                chooseJettyPath();
-            }
-        });
+//        final Group jettyGroup = new Group(tabComposite, SWT.NONE);
+//        jettyGroup.setLayout(new GridLayout(4, false));
+//        jettyGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//        jettyGroup.setText("Jetty:");
+//
+//        embeddedButton =
+//            createButton(jettyGroup, SWT.RADIO, "Use Jetty provided by launcher plugin (Jetty 7.x)", -1, 4, 1,
+//                modifyDialogListener);
+//        externButton = createButton(jettyGroup, SWT.RADIO, "Use Jetty at path:", 128, 1, 1, modifyDialogListener);
+//        pathText = createText(jettyGroup, SWT.BORDER, -1, -1, 3, 1, modifyDialogListener);
+//
+//        createLabel(jettyGroup, "", -1, 2, 1);
+//        pathVariablesButton = createButton(jettyGroup, SWT.NONE, "Variables...", 96, 1, 1, new SelectionAdapter()
+//        {
+//            @Override
+//            public void widgetSelected(SelectionEvent e)
+//            {
+//                chooseJettyPathVariable();
+//            }
+//        });
+//        pathBrowseButton = createButton(jettyGroup, SWT.NONE, "Browse...", 96, 1, 1, new SelectionAdapter()
+//        {
+//            @Override
+//            public void widgetSelected(final SelectionEvent e)
+//            {
+//                chooseJettyPath();
+//            }
+//        });
 
         final Group jettyFeatureGroup = new Group(tabComposite, SWT.NONE);
         jettyFeatureGroup.setLayout(new GridLayout(4, false));
@@ -212,9 +212,9 @@ public class JettyLaunchAdvancedConfigurationTab extends AbstractJettyLaunchConf
     {
         try
         {
-            embeddedButton.setSelection(JettyPluginConstants.isEmbedded(configuration));
-            externButton.setSelection(!JettyPluginConstants.isEmbedded(configuration));
-            pathText.setText(JettyPluginConstants.getPath(configuration));
+            //embeddedButton.setSelection(JettyPluginConstants.isEmbedded(configuration));
+            //externButton.setSelection(!JettyPluginConstants.isEmbedded(configuration));
+            //pathText.setText(JettyPluginConstants.getPath(configuration));
 
             jspSupportButton.setSelection(JettyPluginConstants.isJspSupport(configuration));
             jmxSupportButton.setSelection(JettyPluginConstants.isJmxSupport(configuration));
@@ -272,7 +272,7 @@ public class JettyLaunchAdvancedConfigurationTab extends AbstractJettyLaunchConf
 
     public void performApply(final ILaunchConfigurationWorkingCopy configuration)
     {
-        boolean embedded = embeddedButton.getSelection();
+/*        boolean embedded = embeddedButton.getSelection();
 
         JettyPluginConstants.setEmbedded(configuration, embedded);
 
@@ -291,7 +291,7 @@ public class JettyLaunchAdvancedConfigurationTab extends AbstractJettyLaunchConf
         catch (IllegalArgumentException e)
         {
             // failed to detect
-        }
+        }*/
 
         JettyPluginConstants.setJspSupport(configuration, jspSupportButton.getSelection());
         JettyPluginConstants.setJmxSupport(configuration, jmxSupportButton.getSelection());
@@ -317,8 +317,10 @@ public class JettyLaunchAdvancedConfigurationTab extends AbstractJettyLaunchConf
     {
         setErrorMessage(null);
         setMessage(null);
+        
+        // FIXME: move this validation to the right place 
 
-        boolean embedded = embeddedButton.getSelection();
+/*        boolean embedded = embeddedButton.getSelection();
 
         pathText.setEnabled(!embedded);
         pathVariablesButton.setEnabled(!embedded);
@@ -352,7 +354,7 @@ public class JettyLaunchAdvancedConfigurationTab extends AbstractJettyLaunchConf
                 setErrorMessage("Failed to find and detect Jetty version at path \"" + jettyPath + "\"");
                 return false;
             }
-        }
+        }*/
 
         setDirty(true);
 
