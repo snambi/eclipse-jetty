@@ -1,0 +1,17 @@
+dist
+build
+bin
+target
+reports
+.pmd
+*/.settings/com.springsource.server.ide.jdt.core.prefs
+/tests/
+/coverage/
+/cobertura.ser
+*.class
+*.jar
+*.zip
+*.bak
+*/target/*
+/.settings/
+/*.log
