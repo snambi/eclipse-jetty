@@ -15,6 +15,7 @@ import static net.sourceforge.eclipsejetty.launch.JettyLaunchClasspathMatcher.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -243,9 +244,19 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
 
         try
         {
-            entries.add(JavaRuntime.newArchiveRuntimeClasspathEntry(new Path(FileLocator.toFileURL(
-                FileLocator.find(JettyPlugin.getDefault().getBundle(),
-                    Path.fromOSString("lib/eclipse-jetty-starters-common.jar"), null)).getFile())));
+        	
+        	URL fileurl = FileLocator.find(
+        							JettyPlugin.getDefault().getBundle(),
+        							Path.fromOSString("lib/eclipse-jetty-starters-common.jar"), 
+        							null);
+        	
+        	Path path= new Path(fileurl.getFile());
+        	IRuntimeClasspathEntry classPathEntry = JavaRuntime.newArchiveRuntimeClasspathEntry(path);
+        	entries.add( classPathEntry );
+                    
+//            entries.add(JavaRuntime.newArchiveRuntimeClasspathEntry(new Path(FileLocator.toFileURL(
+//                FileLocator.find(JettyPlugin.getDefault().getBundle(),
+//                    Path.fromOSString("lib/eclipse-jetty-starters-common.jar"), null)).getFile())));
 
             entries.add(JavaRuntime.newArchiveRuntimeClasspathEntry(new Path(FileLocator.toFileURL(
                 FileLocator.find(JettyPlugin.getDefault().getBundle(), Path.fromOSString(jettyVersion.getJar()), null))

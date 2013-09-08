@@ -61,7 +61,7 @@
 				<executions>
 					<execution>
 						<id>copy-dependencies-starters</id>
-						<phase>package</phase>
+						<phase>generate-resources</phase>
 						<goals>
 							<goal>copy-dependencies</goal>
 						</goals>
@@ -79,7 +79,7 @@
 
 					<execution>
 						<id>copy-dependencies-jetty</id>
-						<phase>package</phase>
+						<phase>generate-resources</phase>
 						<goals>
 							<goal>copy-dependencies</goal>
 						</goals>

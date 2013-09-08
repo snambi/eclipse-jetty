@@ -543,6 +543,43 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
                 setErrorMessage(MessageFormat.format("The Jetty context file {0} does not exist.", context.getPath()));
             }
         }
+        
+        
+        boolean embedded = embeddedButton.getSelection();
+
+        pathText.setEnabled(!embedded);
+        pathVariablesButton.setEnabled(!embedded);
+        pathBrowseButton.setEnabled(!embedded);
+
+        if (!embedded)
+        {
+            String jettyPath = JettyPluginUtils.resolveVariables(pathText.getText()).trim();
+
+            if (jettyPath.length() > 0)
+            {
+                File f = new File(jettyPath);
+                if (!f.exists() || !f.isDirectory())
+                {
+                    setErrorMessage(MessageFormat.format("The path {0} is not a valid directory.", jettyPath));
+                    return false;
+                }
+            }
+            else
+            {
+                setErrorMessage("Jetty path is not set");
+                return false;
+            }
+
+            try
+            {
+                JettyPluginUtils.detectJettyVersion(embedded, jettyPath);
+            }
+            catch (final IllegalArgumentException e)
+            {
+                setErrorMessage("Failed to find and detect Jetty version at path \"" + jettyPath + "\"");
+                return false;
+            }
+        }
 
         setDirty(true);
 
