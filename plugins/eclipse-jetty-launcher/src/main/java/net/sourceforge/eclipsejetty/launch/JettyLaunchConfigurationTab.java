@@ -23,6 +23,7 @@ import net.sourceforge.eclipsejetty.JettyPluginConstants;
 import net.sourceforge.eclipsejetty.JettyPluginUtils;
 import net.sourceforge.eclipsejetty.jetty.JettyConfig;
 import net.sourceforge.eclipsejetty.jetty.JettyConfigType;
+import net.sourceforge.eclipsejetty.jetty.JettyVersion;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -424,6 +425,29 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
 
     public void performApply(final ILaunchConfigurationWorkingCopy configuration)
     {
+    	
+    	boolean embedded = embeddedButton.getSelection();
+
+        JettyPluginConstants.setEmbedded(configuration, embedded);
+
+        String jettyPath = pathText.getText().trim();
+
+        JettyPluginConstants.setPath(configuration, jettyPath);
+
+        try
+        {
+            JettyVersion jettyVersion =
+                JettyPluginUtils.detectJettyVersion(embedded, JettyPluginUtils.resolveVariables(jettyPath));
+
+            JettyPluginConstants.setMainTypeName(configuration, jettyVersion);
+            JettyPluginConstants.setVersion(configuration, jettyVersion);
+        }
+        catch (IllegalArgumentException e)
+        {
+            // failed to detect
+        }
+        
+        
         try
         {
             JettyPluginConstants.setProject(configuration, projectText.getText().trim());

@@ -245,11 +245,12 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
         try
         {
         	
-        	URL fileurl = FileLocator.find(
+        	URL bundleurl = FileLocator.find(
         							JettyPlugin.getDefault().getBundle(),
         							Path.fromOSString("lib/eclipse-jetty-starters-common.jar"), 
         							null);
         	
+        	URL fileurl = FileLocator.toFileURL(bundleurl);
         	Path path= new Path(fileurl.getFile());
         	IRuntimeClasspathEntry classPathEntry = JavaRuntime.newArchiveRuntimeClasspathEntry(path);
         	entries.add( classPathEntry );

@@ -272,7 +272,10 @@ public class JettyLaunchAdvancedConfigurationTab extends AbstractJettyLaunchConf
 
     public void performApply(final ILaunchConfigurationWorkingCopy configuration)
     {
-/*        boolean embedded = embeddedButton.getSelection();
+    	
+    	
+    	// FIXME: need to move this to appropriate location
+    	/*boolean embedded = embeddedButton.getSelection();
 
         JettyPluginConstants.setEmbedded(configuration, embedded);
 

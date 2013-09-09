@@ -18,7 +18,8 @@ import java.util.LinkedHashSet;
 import org.eclipse.core.runtime.CoreException;
 
 /**
- * Abstract implementation of the {@link IJettyLibStrategy} using dependencies. In the first pass, all dependencies are
+ * Abstract implementation of the {@link IJettyLibStrategy} using dependencies. 
+ * In the first pass, all dependencies are
  * gathered, in the second pass, the dependencies are resolved.
  * 
  * @author Manfred Hantschel
