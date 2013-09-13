@@ -8,10 +8,13 @@ reports
 /tests/
 /coverage/
 /cobertura.ser
+MANIFEST.MF
 *.class
 *.jar
 *.zip
 *.bak
 */target/*
+/.idea/
 /.settings/
+**/*.iml
 /*.log
