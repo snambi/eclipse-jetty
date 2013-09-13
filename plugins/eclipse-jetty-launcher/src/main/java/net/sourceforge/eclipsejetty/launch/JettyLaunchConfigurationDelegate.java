@@ -235,7 +235,7 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
             entries.addAll(collection);
         }
 
-        final String jettyPath = JettyPluginUtils.resolveVariables(JettyPluginConstants.getPath(configuration));
+        final String jettyPath = JettyPluginUtils.resolveVariables(JettyPluginConstants.getJettyPath(configuration));
         final JettyVersion jettyVersion = JettyPluginConstants.getVersion(configuration);
         boolean jspSupport = JettyPluginConstants.isJspSupport(configuration);
         boolean jmxSupport = JettyPluginConstants.isJmxSupport(configuration);

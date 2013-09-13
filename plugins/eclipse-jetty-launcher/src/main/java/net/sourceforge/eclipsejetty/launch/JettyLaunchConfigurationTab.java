@@ -99,7 +99,7 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
     
     private Button embeddedButton;
     private Button externButton;
-    private Text pathText;
+    private Text containerPath;
     private Button pathVariablesButton;
     private Button pathBrowseButton;
 
@@ -142,6 +142,8 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
         jettyButton = createButton(containerGroup, SWT.RADIO, "Jetty", -1, 4, 1, modifyDialogListener);
         tomcatButton = createButton(containerGroup, SWT.RADIO, "Tomcat", -1, 4, 1, modifyDialogListener); 
         resinButton = createButton(containerGroup, SWT.RADIO, "Resin", -1, 4, 1, modifyDialogListener); 
+        // disable the resin button for now
+        resinButton.setEnabled(false);
         
         // select "jetty" by default
         jettyButton.setSelection(true);
@@ -157,7 +159,7 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
         embeddedButton.setSelection(true);
         
         externButton = createButton(jettyGroup, SWT.RADIO, "Use container at path:", 128, 1, 1, modifyDialogListener);
-        pathText = createText(jettyGroup, SWT.BORDER, -1, -1, 3, 1, modifyDialogListener);
+        containerPath = createText(jettyGroup, SWT.BORDER, -1, -1, 3, 1, modifyDialogListener);
 
         createLabel(jettyGroup, "", -1, 2, 1);
         pathVariablesButton = createButton(jettyGroup, SWT.NONE, "Variables...", 96, 1, 1, new SelectionAdapter()
@@ -425,28 +427,48 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
 
     public void performApply(final ILaunchConfigurationWorkingCopy configuration)
     {
+    	// detect whether tomcat/jetty/resin is selected
+    	boolean tomcatselected = tomcatButton.getSelection();
+    	boolean jettyselected = jettyButton.getSelection();
     	
+    	if( tomcatselected == true ){
+    		JettyPluginConstants.setContainerTomcat(configuration);
+    	}else if( jettyselected == true ){
+    		JettyPluginConstants.setContainerJetty(configuration);
+    	}
+    	
+    	// detect whether the container is embedded or not
     	boolean embedded = embeddedButton.getSelection();
-
         JettyPluginConstants.setEmbedded(configuration, embedded);
 
-        String jettyPath = pathText.getText().trim();
+        // detect whether external container is used or not
+        String containerInstallDir = containerPath.getText().trim();
+        if( containerInstallDir != null && !containerInstallDir.trim().equals("")){
+        	        	
+        	if( tomcatselected == true){
+        		JettyPluginConstants.setTomcatPath(configuration, containerInstallDir);
+        	}
+        	if( jettyselected == true ){
+        		JettyPluginConstants.setJettyPath(configuration, containerInstallDir);
+        		
+                try
+                {
+                    JettyVersion jettyVersion =
+                        JettyPluginUtils.detectJettyVersion(embedded, JettyPluginUtils.resolveVariables(containerInstallDir));
 
-        JettyPluginConstants.setPath(configuration, jettyPath);
-
-        try
-        {
-            JettyVersion jettyVersion =
-                JettyPluginUtils.detectJettyVersion(embedded, JettyPluginUtils.resolveVariables(jettyPath));
-
-            JettyPluginConstants.setMainTypeName(configuration, jettyVersion);
-            JettyPluginConstants.setVersion(configuration, jettyVersion);
-        }
-        catch (IllegalArgumentException e)
-        {
-            // failed to detect
+                    JettyPluginConstants.setMainTypeName(configuration, jettyVersion);
+                    JettyPluginConstants.setVersion(configuration, jettyVersion);
+                }
+                catch (IllegalArgumentException e)
+                {
+                    // failed to detect
+                }
+                
+        	}
         }
         
+
+
         
         try
         {
@@ -571,20 +593,22 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
         
         boolean embedded = embeddedButton.getSelection();
 
-        pathText.setEnabled(!embedded);
+        containerPath.setEnabled(!embedded);
         pathVariablesButton.setEnabled(!embedded);
         pathBrowseButton.setEnabled(!embedded);
 
         if (!embedded)
         {
-            String jettyPath = JettyPluginUtils.resolveVariables(pathText.getText()).trim();
-
-            if (jettyPath.length() > 0)
+        	// check whether the directory contains a valid container
+        	
+            String containerInstallDir = JettyPluginUtils.resolveVariables(containerPath.getText()).trim();
+            
+            if (containerInstallDir.length() > 0)
             {
-                File f = new File(jettyPath);
+                File f = new File(containerInstallDir);
                 if (!f.exists() || !f.isDirectory())
                 {
-                    setErrorMessage(MessageFormat.format("The path {0} is not a valid directory.", jettyPath));
+                    setErrorMessage(MessageFormat.format("The path {0} is not a valid directory.", containerInstallDir));
                     return false;
                 }
             }
@@ -593,15 +617,22 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
                 setErrorMessage("Jetty path is not set");
                 return false;
             }
-
-            try
-            {
-                JettyPluginUtils.detectJettyVersion(embedded, jettyPath);
+            
+            
+            if( tomcatButton.getSelection() == true){
+            	// TODO: detect tomcat
             }
-            catch (final IllegalArgumentException e)
-            {
-                setErrorMessage("Failed to find and detect Jetty version at path \"" + jettyPath + "\"");
-                return false;
+            
+            if( jettyButton.getSelection() == true ){
+                try
+                {
+                    JettyPluginUtils.detectJettyVersion(embedded, containerInstallDir);
+                }
+                catch (final IllegalArgumentException e)
+                {
+                    setErrorMessage("Failed to find and detect Jetty version at path \"" + containerInstallDir + "\"");
+                    return false;
+                }
             }
         }
 
@@ -799,8 +830,8 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
             for (int i = results.length - 1; i >= 0; i -= 1)
             {
                 String placeholder = "${" + ((IStringVariable) results[i]).getName() + "}";
-                int position = pathText.getCaretPosition();
-                String text = pathText.getText();
+                int position = containerPath.getCaretPosition();
+                String text = containerPath.getText();
 
                 if (position <= 0)
                 {
@@ -815,14 +846,14 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
                     text = text.substring(0, position) + placeholder + text.substring(position);
                 }
 
-                pathText.setText(text);
+                containerPath.setText(text);
             }
         }
     }
 
     protected void chooseJettyPath()
     {
-        String jettyPath = JettyPluginUtils.resolveVariables(pathText.getText());
+        String jettyPath = JettyPluginUtils.resolveVariables(containerPath.getText());
         DirectoryDialog dialog = new DirectoryDialog(getShell(), SWT.OPEN);
 
         dialog.setText("Select Jetty Home Directory");
@@ -834,7 +865,7 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
 
         if (jettyPath != null)
         {
-            pathText.setText(jettyPath);
+            containerPath.setText(jettyPath);
         }
     }
 }

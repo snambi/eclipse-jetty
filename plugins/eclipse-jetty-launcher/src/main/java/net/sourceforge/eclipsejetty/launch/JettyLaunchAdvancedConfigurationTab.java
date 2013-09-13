@@ -241,7 +241,7 @@ public class JettyLaunchAdvancedConfigurationTab extends AbstractJettyLaunchConf
         try
         {
             JettyPluginConstants.setEmbedded(configuration, JettyPluginConstants.isEmbedded(configuration));
-            JettyPluginConstants.setPath(configuration, JettyPluginConstants.getPath(configuration));
+            JettyPluginConstants.setJettyPath(configuration, JettyPluginConstants.getJettyPath(configuration));
 
             JettyPluginConstants.setJspSupport(configuration, JettyPluginConstants.isJspSupport(configuration));
             JettyPluginConstants.setJmxSupport(configuration, JettyPluginConstants.isJmxSupport(configuration));

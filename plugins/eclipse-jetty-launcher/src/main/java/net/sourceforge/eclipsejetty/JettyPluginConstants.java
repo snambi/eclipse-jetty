@@ -37,19 +37,38 @@ public class JettyPluginConstants
     public static final String LAUNCH_CONFIG_TYPE = JettyPlugin.PLUGIN_ID + ".launchConfigurationType";
     public static final String CLASSPATH_PROVIDER_JETTY = JettyPlugin.PLUGIN_ID + ".JettyLaunchClassPathProvider";
 
+    // webapplication specific constants
     private static final String ATTR_CONTEXT = JettyPlugin.PLUGIN_ID + ".context";
     private static final String ATTR_WEBAPPDIR = JettyPlugin.PLUGIN_ID + ".webappdir";
     private static final String ATTR_PORT = JettyPlugin.PLUGIN_ID + ".port";
+    
+    // constants for container selection
+    private static final String  ATTR_CONTAINER_SELECTED = JettyPlugin.PLUGIN_ID + ".container.selected";
+    private static final String  ATTR_CONTAINER_JETTY = JettyPlugin.PLUGIN_ID + ".container.jetty";
+    private static final String  ATTR_CONTAINER_TOMCAT = JettyPlugin.PLUGIN_ID + ".container.tomcat";
+    
+    // tomcat specific constants
+    private static final String ATTR_TOMCAT_PATH = JettyPlugin.PLUGIN_ID + ".tomcat.path";
+    private static final String ATTR_TOMCAT_EMBEDDED = JettyPlugin.PLUGIN_ID + ".tomcat.embedded";
+    private static final String ATTR_TOMCAT_VERSION = JettyPlugin.PLUGIN_ID + ".tomcat.version";
+    private static final String ATTR_TOMCAT_CATALINA_HOME = JettyPlugin.PLUGIN_ID + ".tomcat.catalina.home";
+    private static final String ATTR_TOMCAT_CATALINE_BASE = JettyPlugin.PLUGIN_ID + ".tomcat.catalina.base";
+    
+    // jetty specific constants
     private static final String ATTR_JETTY_PATH = JettyPlugin.PLUGIN_ID + ".jetty.path";
     private static final String ATTR_JETTY_EMBEDDED = JettyPlugin.PLUGIN_ID + ".jetty.embedded";
     private static final String ATTR_JETTY_VERSION = JettyPlugin.PLUGIN_ID + ".jetty.version";
     private static final String ATTR_JETTY_CONFIG_PATH = JettyPlugin.PLUGIN_ID + ".jetty.config.path.";
     private static final String ATTR_JETTY_CONFIG_TYPE = JettyPlugin.PLUGIN_ID + ".jetty.config.type.";
     private static final String ATTR_JETTY_CONFIG_ACTIVE = JettyPlugin.PLUGIN_ID + ".jetty.config.active.";
+    
+    // specific to enabling specific features on the container
     private static final String ATTR_JSP_ENABLED = JettyPlugin.PLUGIN_ID + ".jsp.enabled";
     private static final String ATTR_JMX_ENABLED = JettyPlugin.PLUGIN_ID + ".jmx.enabled";
     private static final String ATTR_JNDI_ENABLED = JettyPlugin.PLUGIN_ID + ".jndi.enabled";
     private static final String ATTR_AJP_ENABLED = JettyPlugin.PLUGIN_ID + ".ajp.enabled";
+    
+    // constants specific to the scope of the dependencies ( these are derived from maven )
     private static final String ATTR_EXCLUDE_SCOPE_COMPILE = JettyPlugin.PLUGIN_ID + ".scope.compile.exclude";
     private static final String ATTR_EXCLUDE_SCOPE_PROVIDED = JettyPlugin.PLUGIN_ID + ".scope.provided.exclude";
     private static final String ATTR_EXCLUDE_SCOPE_RUNTIME = JettyPlugin.PLUGIN_ID + ".scope.runtime.exclude";
@@ -58,8 +77,25 @@ public class JettyPluginConstants
     private static final String ATTR_EXCLUDED_LIBS = JettyPlugin.PLUGIN_ID + ".launcher.excludeLibs";
     private static final String ATTR_INCLUDED_LIBS = JettyPlugin.PLUGIN_ID + ".launcher.includeLibs";
     private static final String ATTR_GLOBAL_LIBS = JettyPlugin.PLUGIN_ID + ".launcher.globalLibs";
+    
+    // constants specific to this plugin
     private static final String ATTR_SHOW_LAUNCHER_INFO = JettyPlugin.PLUGIN_ID + ".launcher.info";
 
+    
+    // container selection APIs
+    public static String getContainerSelected( ILaunchConfiguration configuration ) throws CoreException{
+    	return configuration.getAttribute(ATTR_CONTAINER_SELECTED, ATTR_CONTAINER_JETTY);
+    }
+    
+    public static void setContainerJetty( ILaunchConfigurationWorkingCopy configuration) {
+    	configuration.setAttribute(ATTR_CONTAINER_SELECTED, ATTR_CONTAINER_JETTY);
+    }
+    
+    public static void setContainerTomcat( ILaunchConfigurationWorkingCopy configuration) {
+    	configuration.setAttribute(ATTR_CONTAINER_SELECTED, ATTR_CONTAINER_TOMCAT);
+    }  
+    
+    
     /**
      * Returns the name of the selected eclipse project, that should be launched
      * 
@@ -151,14 +187,36 @@ public class JettyPluginConstants
     {
         configuration.setAttribute(ATTR_PORT, port);
     }
+    
+    
+    
+    
+    
+    
+    // Tomcat specific APIs
+    public static void setTomcatPath( ILaunchConfigurationWorkingCopy configuration, 
+    				String tomcatpath){
+    	
+    	configuration.setAttribute(ATTR_TOMCAT_PATH, tomcatpath);
+    }
+    
+    public static String getTomcatPath( ILaunchConfiguration configuration ) throws CoreException{
+    	return configuration.getAttribute(ATTR_TOMCAT_PATH, "");
+    }
 
-    public static String getPath(ILaunchConfiguration configuration) throws CoreException
+    
+    
+    
+    
+    // JETTY Specific APIs
+
+    public static String getJettyPath(ILaunchConfiguration configuration) throws CoreException
     {
         return configuration.getAttribute(ATTR_JETTY_PATH,
             DefaultScope.INSTANCE.getNode(JettyPlugin.PLUGIN_ID).get(ATTR_JETTY_PATH, ""));
     }
 
-    public static void setPath(ILaunchConfigurationWorkingCopy configuration, String path)
+    public static void setJettyPath(ILaunchConfigurationWorkingCopy configuration, String path)
     {
         configuration.setAttribute(ATTR_JETTY_PATH, path);
 

@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.regex.PatternSyntaxException;
 
 import net.sourceforge.eclipsejetty.jetty.JettyVersion;
+import net.sourceforge.eclipsejetty.tomcat.TomcatVersion;
 import net.sourceforge.eclipsejetty.util.RegularMatcher;
 
 import org.eclipse.core.runtime.CoreException;
@@ -200,6 +201,11 @@ public class JettyPluginUtils
         }
 
         throw new IllegalArgumentException("Failed to detect Jetty version.");
+    }
+    
+    public static TomcatVersion detectTomcatVersion( boolean embedded , final String tomcatPath ){
+    	// TODO: properly detect the version
+    	return null;
     }
 
     public static List<RegularMatcher> extractPatterns(final List<RegularMatcher> list, final String... text)

@@ -28,6 +28,7 @@
 		<module>jetty7</module>
 		<module>jetty8</module>
 		<module>jetty9</module>
+		<module>tomcat</module>
 	</modules>
 
 </project>
