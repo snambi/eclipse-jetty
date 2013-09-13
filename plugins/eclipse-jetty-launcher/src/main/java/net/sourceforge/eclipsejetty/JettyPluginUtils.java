@@ -20,8 +20,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.PatternSyntaxException;
 
-import net.sourceforge.eclipsejetty.jetty.JettyVersion;
-import net.sourceforge.eclipsejetty.tomcat.TomcatVersion;
+import net.sourceforge.eclipsejetty.common.ContainerVersion;
 import net.sourceforge.eclipsejetty.util.RegularMatcher;
 
 import org.eclipse.core.runtime.CoreException;
@@ -151,12 +150,12 @@ public class JettyPluginUtils
      * @return the version, not AUTO
      * @throws IllegalArgumentException if the detection fails
      */
-    public static JettyVersion detectJettyVersion(boolean embedded, final String jettyPath)
+    public static ContainerVersion detectJettyVersion(boolean embedded, final String jettyPath)
         throws IllegalArgumentException
     {
         if (embedded)
         {
-            return JettyVersion.JETTY_EMBEDDED;
+            return ContainerVersion.JETTY_EMBEDDED;
         }
 
         final File jettyLibDir = new File(jettyPath, "lib");
@@ -183,19 +182,19 @@ public class JettyPluginUtils
 
                 if (name.contains("-6."))
                 {
-                    return JettyVersion.JETTY_6;
+                    return ContainerVersion.JETTY_6;
                 }
                 else if (name.contains("-7."))
                 {
-                    return JettyVersion.JETTY_7;
+                    return ContainerVersion.JETTY_7;
                 }
                 else if (name.contains("-8."))
                 {
-                    return JettyVersion.JETTY_8;
+                    return ContainerVersion.JETTY_8;
                 }
                 else if (name.contains("-9."))
                 {
-                    return JettyVersion.JETTY_9;
+                    return ContainerVersion.JETTY_9;
                 }
             }
         }
@@ -203,9 +202,9 @@ public class JettyPluginUtils
         throw new IllegalArgumentException("Failed to detect Jetty version.");
     }
     
-    public static TomcatVersion detectTomcatVersion( boolean embedded , final String tomcatPath ){
+    public static ContainerVersion detectTomcatVersion( boolean embedded , final String tomcatPath ){
     	// TODO: properly detect the version
-    	return null;
+    	return ContainerVersion.TOMCAT_7;
     }
 
     public static List<RegularMatcher> extractPatterns(final List<RegularMatcher> list, final String... text)

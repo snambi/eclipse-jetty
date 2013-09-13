@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import net.sourceforge.eclipsejetty.JettyPlugin;
+import net.sourceforge.eclipsejetty.common.IJettyLibStrategy;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;

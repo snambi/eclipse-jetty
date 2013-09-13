@@ -11,8 +11,11 @@
 // limitations under the License.
 package net.sourceforge.eclipsejetty.launch;
 
-import static net.sourceforge.eclipsejetty.launch.JettyLaunchUI.*;
-import static org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants.*;
+import static net.sourceforge.eclipsejetty.launch.JettyLaunchUI.createButton;
+import static net.sourceforge.eclipsejetty.launch.JettyLaunchUI.createLabel;
+import static net.sourceforge.eclipsejetty.launch.JettyLaunchUI.createTable;
+import static net.sourceforge.eclipsejetty.launch.JettyLaunchUI.createText;
+import static org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME;
 
 import java.io.File;
 import java.text.MessageFormat;
@@ -21,9 +24,9 @@ import java.util.List;
 import net.sourceforge.eclipsejetty.JettyPlugin;
 import net.sourceforge.eclipsejetty.JettyPluginConstants;
 import net.sourceforge.eclipsejetty.JettyPluginUtils;
+import net.sourceforge.eclipsejetty.common.ContainerVersion;
 import net.sourceforge.eclipsejetty.jetty.JettyConfig;
 import net.sourceforge.eclipsejetty.jetty.JettyConfigType;
-import net.sourceforge.eclipsejetty.jetty.JettyVersion;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -447,16 +450,18 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
         	        	
         	if( tomcatselected == true){
         		JettyPluginConstants.setTomcatPath(configuration, containerInstallDir);
+        		ContainerVersion tomcatVersion = JettyPluginUtils.detectTomcatVersion(embedded, containerInstallDir);
+        		JettyPluginConstants.setContainerMainTypeName(configuration, tomcatVersion);
         	}
         	if( jettyselected == true ){
         		JettyPluginConstants.setJettyPath(configuration, containerInstallDir);
         		
                 try
                 {
-                    JettyVersion jettyVersion =
+                    ContainerVersion jettyVersion =
                         JettyPluginUtils.detectJettyVersion(embedded, JettyPluginUtils.resolveVariables(containerInstallDir));
 
-                    JettyPluginConstants.setMainTypeName(configuration, jettyVersion);
+                    JettyPluginConstants.setContainerMainTypeName(configuration, jettyVersion);
                     JettyPluginConstants.setVersion(configuration, jettyVersion);
                 }
                 catch (IllegalArgumentException e)

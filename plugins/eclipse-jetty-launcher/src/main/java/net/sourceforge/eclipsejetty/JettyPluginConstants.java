@@ -16,7 +16,7 @@ import java.util.List;
 
 import net.sourceforge.eclipsejetty.jetty.JettyConfig;
 import net.sourceforge.eclipsejetty.jetty.JettyConfigType;
-import net.sourceforge.eclipsejetty.jetty.JettyVersion;
+import net.sourceforge.eclipsejetty.common.ContainerVersion;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.preferences.DefaultScope;
@@ -254,12 +254,12 @@ public class JettyPluginConstants
         }
     }
 
-    public static JettyVersion getVersion(ILaunchConfiguration configuration) throws CoreException
+    public static ContainerVersion getVersion(ILaunchConfiguration configuration) throws CoreException
     {
-        return JettyVersion.valueOf(configuration.getAttribute(ATTR_JETTY_VERSION, JettyVersion.JETTY_EMBEDDED.name()));
+        return ContainerVersion.valueOf(configuration.getAttribute(ATTR_JETTY_VERSION, ContainerVersion.JETTY_EMBEDDED.name()));
     }
 
-    public static void setVersion(ILaunchConfigurationWorkingCopy configuration, JettyVersion jettyVersion)
+    public static void setVersion(ILaunchConfigurationWorkingCopy configuration, ContainerVersion jettyVersion)
     {
         configuration.setAttribute(ATTR_JETTY_VERSION, jettyVersion.name());
     }
@@ -461,14 +461,13 @@ public class JettyPluginConstants
         configuration.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH_PROVIDER, classpathProvider);
     }
 
-    public static String getMainTypeName(ILaunchConfiguration configuration) throws CoreException
+    public static String getContainerMainTypeName(ILaunchConfiguration configuration) throws CoreException
     {
         return configuration.getAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, "");
     }
 
-    public static void setMainTypeName(ILaunchConfigurationWorkingCopy configuration, JettyVersion jettyVersion)
+    public static void setContainerMainTypeName(ILaunchConfigurationWorkingCopy configuration, ContainerVersion containerVersion)
     {
-        configuration.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, jettyVersion.getMainClass());
+        configuration.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, containerVersion.getMainClass());
     }
-
 }

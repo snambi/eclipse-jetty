@@ -14,7 +14,7 @@ package net.sourceforge.eclipsejetty.jetty6;
 import java.util.Arrays;
 import java.util.List;
 
-import net.sourceforge.eclipsejetty.jetty.AbstractServerConfiguration;
+import net.sourceforge.eclipsejetty.common.AbstractServerConfiguration;
 import net.sourceforge.eclipsejetty.util.DOMBuilder;
 
 /**

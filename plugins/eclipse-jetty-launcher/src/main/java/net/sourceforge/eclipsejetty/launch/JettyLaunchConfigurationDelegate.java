@@ -11,7 +11,13 @@
 // limitations under the License.
 package net.sourceforge.eclipsejetty.launch;
 
-import static net.sourceforge.eclipsejetty.launch.JettyLaunchClasspathMatcher.*;
+import static net.sourceforge.eclipsejetty.launch.JettyLaunchClasspathMatcher.and;
+import static net.sourceforge.eclipsejetty.launch.JettyLaunchClasspathMatcher.isIncluded;
+import static net.sourceforge.eclipsejetty.launch.JettyLaunchClasspathMatcher.not;
+import static net.sourceforge.eclipsejetty.launch.JettyLaunchClasspathMatcher.notExcluded;
+import static net.sourceforge.eclipsejetty.launch.JettyLaunchClasspathMatcher.or;
+import static net.sourceforge.eclipsejetty.launch.JettyLaunchClasspathMatcher.userClasses;
+import static net.sourceforge.eclipsejetty.launch.JettyLaunchClasspathMatcher.withExtraAttribute;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,9 +32,9 @@ import java.util.List;
 import net.sourceforge.eclipsejetty.JettyPlugin;
 import net.sourceforge.eclipsejetty.JettyPluginConstants;
 import net.sourceforge.eclipsejetty.JettyPluginUtils;
-import net.sourceforge.eclipsejetty.jetty.AbstractServerConfiguration;
+import net.sourceforge.eclipsejetty.common.AbstractServerConfiguration;
+import net.sourceforge.eclipsejetty.common.ContainerVersion;
 import net.sourceforge.eclipsejetty.jetty.JettyConfig;
-import net.sourceforge.eclipsejetty.jetty.JettyVersion;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -70,7 +76,7 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
     @Override
     public String verifyMainTypeName(ILaunchConfiguration configuration) throws CoreException
     {
-        return JettyPluginConstants.getMainTypeName(configuration);
+        return JettyPluginConstants.getContainerMainTypeName(configuration);
     }
 
     @Override
@@ -80,7 +86,7 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
             getLocalWebappClasspath(configuration,
                 getWebappClasspathEntries(configuration, getOriginalClasspathEntries(configuration)));
 
-        final JettyVersion jettyVersion = JettyPluginConstants.getVersion(configuration);
+        final ContainerVersion jettyVersion = JettyPluginConstants.getVersion(configuration);
         File defaultFile = createJettyConfigurationFile(configuration, jettyVersion, webappClasspath);
         String vmArguments = super.getVMArguments(configuration);
 
@@ -236,7 +242,7 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
         }
 
         final String jettyPath = JettyPluginUtils.resolveVariables(JettyPluginConstants.getJettyPath(configuration));
-        final JettyVersion jettyVersion = JettyPluginConstants.getVersion(configuration);
+        final ContainerVersion jettyVersion = JettyPluginConstants.getVersion(configuration);
         boolean jspSupport = JettyPluginConstants.isJspSupport(configuration);
         boolean jmxSupport = JettyPluginConstants.isJmxSupport(configuration);
         boolean jndiSupport = JettyPluginConstants.isJndiSupport(configuration);
@@ -324,7 +330,7 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
         return vmClasspathMatcher;
     }
 
-    private File createJettyConfigurationFile(ILaunchConfiguration configuration, JettyVersion version,
+    private File createJettyConfigurationFile(ILaunchConfiguration configuration, ContainerVersion version,
         String[] classpath) throws CoreException
     {
         AbstractServerConfiguration serverConfiguration = version.createServerConfiguration();

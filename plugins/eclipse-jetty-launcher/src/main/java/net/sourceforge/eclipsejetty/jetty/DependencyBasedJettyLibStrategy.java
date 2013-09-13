@@ -15,6 +15,8 @@ import java.io.File;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
+import net.sourceforge.eclipsejetty.common.IJettyLibStrategy;
+
 import org.eclipse.core.runtime.CoreException;
 
 /**

@@ -11,10 +11,11 @@
 // limitations under the License.
 package net.sourceforge.eclipsejetty.launch;
 
-import static net.sourceforge.eclipsejetty.launch.JettyLaunchUI.*;
+import static net.sourceforge.eclipsejetty.launch.JettyLaunchUI.createButton;
+import static net.sourceforge.eclipsejetty.launch.JettyLaunchUI.createLabel;
+import static net.sourceforge.eclipsejetty.launch.JettyLaunchUI.createTable;
+import static net.sourceforge.eclipsejetty.launch.JettyLaunchUI.createText;
 
-import java.io.File;
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -22,7 +23,6 @@ import java.util.HashSet;
 import net.sourceforge.eclipsejetty.JettyPlugin;
 import net.sourceforge.eclipsejetty.JettyPluginConstants;
 import net.sourceforge.eclipsejetty.JettyPluginUtils;
-import net.sourceforge.eclipsejetty.jetty.JettyVersion;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.variables.IStringVariable;
