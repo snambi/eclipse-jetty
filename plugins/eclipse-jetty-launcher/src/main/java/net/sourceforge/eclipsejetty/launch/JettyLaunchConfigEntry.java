@@ -1,8 +1,8 @@
 package net.sourceforge.eclipsejetty.launch;
 
 import net.sourceforge.eclipsejetty.JettyPluginUtils;
-import net.sourceforge.eclipsejetty.jetty.JettyConfig;
-import net.sourceforge.eclipsejetty.jetty.JettyConfigType;
+import net.sourceforge.eclipsejetty.common.ContainerConfig;
+import net.sourceforge.eclipsejetty.common.ContainerConfigType;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
@@ -18,7 +18,7 @@ public class JettyLaunchConfigEntry
 {
 
     private String path;
-    private JettyConfigType type;
+    private ContainerConfigType type;
     private boolean active;
 
     private boolean needsUpdate;
@@ -30,7 +30,7 @@ public class JettyLaunchConfigEntry
         super();
     }
 
-    public JettyLaunchConfigEntry(JettyConfig config)
+    public JettyLaunchConfigEntry(ContainerConfig config)
     {
         super();
 
@@ -55,12 +55,12 @@ public class JettyLaunchConfigEntry
         }
     }
 
-    public JettyConfigType getType()
+    public ContainerConfigType getType()
     {
         return type;
     }
 
-    public void setType(JettyConfigType type)
+    public void setType(ContainerConfigType type)
     {
         if (!JettyPluginUtils.equals(this.type, type))
         {
@@ -98,7 +98,7 @@ public class JettyLaunchConfigEntry
         {
             public void handleEvent(Event e)
             {
-                if (type != JettyConfigType.DEFAULT)
+                if (type != ContainerConfigType.DEFAULT)
                 {
                     //                    button.setSelection(!button.getSelection());
                     active = button.getSelection();
@@ -200,9 +200,9 @@ public class JettyLaunchConfigEntry
         this.item = item;
     }
 
-    public JettyConfig getJettyConfig()
+    public ContainerConfig getJettyConfig()
     {
-        return new JettyConfig(path, type, active);
+        return new ContainerConfig(path, type, active);
     }
 
 }

@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author Manfred Hantschel
  */
-public interface IJettyLibStrategy
+public interface IContainerLibStrategy
 {
 
     Collection<File> find(File jettyPath, boolean jspSupport, boolean jmxSupport, boolean jndiSupport, boolean ajpSupport) throws CoreException;

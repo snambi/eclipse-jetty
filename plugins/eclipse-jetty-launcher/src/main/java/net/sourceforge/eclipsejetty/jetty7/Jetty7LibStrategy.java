@@ -13,14 +13,14 @@ package net.sourceforge.eclipsejetty.jetty7;
 
 import java.util.Collection;
 
-import net.sourceforge.eclipsejetty.jetty.FileBasedJettyLibStrategy;
+import net.sourceforge.eclipsejetty.jetty.FileBasedContainerLibStrategy;
 
 /**
  * Resolve libs for Jetty 7
  * 
  * @author Manfred Hantschel
  */
-public class Jetty7LibStrategy extends FileBasedJettyLibStrategy
+public class Jetty7LibStrategy extends FileBasedContainerLibStrategy
 {
 
     /* (non-Javadoc)

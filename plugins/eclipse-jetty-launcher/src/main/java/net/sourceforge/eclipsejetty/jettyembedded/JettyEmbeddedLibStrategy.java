@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 import net.sourceforge.eclipsejetty.JettyPlugin;
-import net.sourceforge.eclipsejetty.jetty.DependencyBasedJettyLibStrategy;
+import net.sourceforge.eclipsejetty.jetty.DependencyBasedContainerLibStrategy;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
@@ -29,7 +29,7 @@ import org.eclipse.core.runtime.Status;
  * 
  * @author Manfred Hantschel
  */
-public class JettyEmbeddedLibStrategy extends DependencyBasedJettyLibStrategy
+public class JettyEmbeddedLibStrategy extends DependencyBasedContainerLibStrategy
 {
 
     /* (non-Javadoc)

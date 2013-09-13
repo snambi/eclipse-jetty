@@ -33,8 +33,8 @@ import net.sourceforge.eclipsejetty.JettyPlugin;
 import net.sourceforge.eclipsejetty.JettyPluginConstants;
 import net.sourceforge.eclipsejetty.JettyPluginUtils;
 import net.sourceforge.eclipsejetty.common.AbstractServerConfiguration;
+import net.sourceforge.eclipsejetty.common.ContainerConfig;
 import net.sourceforge.eclipsejetty.common.ContainerVersion;
-import net.sourceforge.eclipsejetty.jetty.JettyConfig;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -103,9 +103,9 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
     private String getConfigurationParameter(ILaunchConfiguration configuration, File defaultFile) throws CoreException
     {
         StringBuilder configurationParam = new StringBuilder();
-        List<JettyConfig> configs = JettyPluginConstants.getConfigs(configuration);
+        List<ContainerConfig> configs = JettyPluginConstants.getConfigs(configuration);
 
-        for (JettyConfig config : configs)
+        for (ContainerConfig config : configs)
         {
             if (config.isActive())
             {

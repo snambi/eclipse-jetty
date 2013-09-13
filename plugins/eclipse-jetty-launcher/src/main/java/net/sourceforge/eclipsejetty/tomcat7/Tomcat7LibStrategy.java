@@ -5,9 +5,9 @@ import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
 
-import net.sourceforge.eclipsejetty.common.IJettyLibStrategy;
+import net.sourceforge.eclipsejetty.common.IContainerLibStrategy;
 
-public class Tomcat7LibStrategy implements IJettyLibStrategy{
+public class Tomcat7LibStrategy implements IContainerLibStrategy{
 
 	public Collection<File> find(File jettyPath, boolean jspSupport,
 			boolean jmxSupport, boolean jndiSupport, boolean ajpSupport)

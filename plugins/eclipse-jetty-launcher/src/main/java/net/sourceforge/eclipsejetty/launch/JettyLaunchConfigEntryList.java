@@ -3,7 +3,7 @@ package net.sourceforge.eclipsejetty.launch;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.eclipsejetty.jetty.JettyConfig;
+import net.sourceforge.eclipsejetty.common.ContainerConfig;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -64,7 +64,7 @@ public class JettyLaunchConfigEntryList
         entryA.createItem(table, listener, index + 1);
     }
 
-    public boolean update(ILaunchConfiguration configuration, Table table, List<JettyConfig> configs)
+    public boolean update(ILaunchConfiguration configuration, Table table, List<ContainerConfig> configs)
         throws CoreException
     {
         if (configHash != configuration.hashCode())
@@ -77,7 +77,7 @@ public class JettyLaunchConfigEntryList
 
         // run through all entries and update the state of the entry
         int index = 0;
-        for (JettyConfig config : configs)
+        for (ContainerConfig config : configs)
         {
             if (index >= entries.size())
             {
@@ -122,9 +122,9 @@ public class JettyLaunchConfigEntryList
         entries.clear();
     }
 
-    public List<JettyConfig> getConfigs()
+    public List<ContainerConfig> getConfigs()
     {
-        List<JettyConfig> results = new ArrayList<JettyConfig>();
+        List<ContainerConfig> results = new ArrayList<ContainerConfig>();
 
         for (JettyLaunchConfigEntry entry : entries)
         {

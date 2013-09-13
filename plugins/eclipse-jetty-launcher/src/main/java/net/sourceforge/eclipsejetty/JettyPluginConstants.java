@@ -14,8 +14,8 @@ package net.sourceforge.eclipsejetty;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.eclipsejetty.jetty.JettyConfig;
-import net.sourceforge.eclipsejetty.jetty.JettyConfigType;
+import net.sourceforge.eclipsejetty.common.ContainerConfig;
+import net.sourceforge.eclipsejetty.common.ContainerConfigType;
 import net.sourceforge.eclipsejetty.common.ContainerVersion;
 
 import org.eclipse.core.runtime.CoreException;
@@ -268,12 +268,12 @@ public class JettyPluginConstants
      * Returns the configuration context holders
      * 
      * @param configuration the configuration
-     * @return a list of {@link JettyConfig}s
+     * @return a list of {@link ContainerConfig}s
      * @throws CoreException on occasion
      */
-    public static List<JettyConfig> getConfigs(ILaunchConfiguration configuration) throws CoreException
+    public static List<ContainerConfig> getConfigs(ILaunchConfiguration configuration) throws CoreException
     {
-        List<JettyConfig> results = new ArrayList<JettyConfig>();
+        List<ContainerConfig> results = new ArrayList<ContainerConfig>();
         int index = 0;
 
         while (true)
@@ -285,29 +285,29 @@ public class JettyPluginConstants
                 break;
             }
 
-            JettyConfigType type =
-                JettyConfigType.valueOf(configuration.getAttribute(ATTR_JETTY_CONFIG_TYPE + index,
-                    JettyConfigType.PATH.name()));
+            ContainerConfigType type =
+                ContainerConfigType.valueOf(configuration.getAttribute(ATTR_JETTY_CONFIG_TYPE + index,
+                    ContainerConfigType.PATH.name()));
             boolean active = configuration.getAttribute(ATTR_JETTY_CONFIG_ACTIVE + index, true);
 
-            results.add(new JettyConfig(path, type, active));
+            results.add(new ContainerConfig(path, type, active));
             index += 1;
         }
 
         if (results.size() == 0)
         {
-            results.add(new JettyConfig("", JettyConfigType.DEFAULT, true));
+            results.add(new ContainerConfig("", ContainerConfigType.DEFAULT, true));
         }
 
         return results;
     }
 
-    public static void setConfigs(ILaunchConfigurationWorkingCopy configuration, List<JettyConfig> entries)
+    public static void setConfigs(ILaunchConfigurationWorkingCopy configuration, List<ContainerConfig> entries)
         throws CoreException
     {
         int index = 0;
 
-        for (JettyConfig entry : entries)
+        for (ContainerConfig entry : entries)
         {
             configuration.setAttribute(ATTR_JETTY_CONFIG_PATH + index, entry.getPath());
             configuration.setAttribute(ATTR_JETTY_CONFIG_TYPE + index, entry.getType().name());

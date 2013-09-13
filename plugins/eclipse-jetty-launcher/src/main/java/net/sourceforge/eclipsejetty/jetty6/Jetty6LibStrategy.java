@@ -14,7 +14,7 @@ package net.sourceforge.eclipsejetty.jetty6;
 import java.io.File;
 import java.util.Collection;
 
-import net.sourceforge.eclipsejetty.jetty.FileBasedJettyLibStrategy;
+import net.sourceforge.eclipsejetty.jetty.FileBasedContainerLibStrategy;
 
 /**
  * Resolve libs for Jetty 6
@@ -22,7 +22,7 @@ import net.sourceforge.eclipsejetty.jetty.FileBasedJettyLibStrategy;
  * @author Christian K&ouml;berl
  * @author Manfred Hantschel
  */
-public class Jetty6LibStrategy extends FileBasedJettyLibStrategy
+public class Jetty6LibStrategy extends FileBasedContainerLibStrategy
 {
 
     /* (non-Javadoc)

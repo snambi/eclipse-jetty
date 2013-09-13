@@ -55,12 +55,12 @@ public enum ContainerVersion
     private final String mainClass;
     private final String jar;
     private final Class<? extends AbstractServerConfiguration> serverConfigurationClass;
-    private final IJettyLibStrategy libStrategy;
+    private final IContainerLibStrategy libStrategy;
 
     private ContainerVersion(String mainClass, 
     							String jar,
     							Class<? extends AbstractServerConfiguration> serverConfigurationClass, 
-    							IJettyLibStrategy libStrategy)
+    							IContainerLibStrategy libStrategy)
     {
         this.mainClass = mainClass;
         this.jar = jar;
@@ -94,7 +94,7 @@ public enum ContainerVersion
         }
     }
 
-    public IJettyLibStrategy getLibStrategy()
+    public IContainerLibStrategy getLibStrategy()
     {
         return libStrategy;
     }

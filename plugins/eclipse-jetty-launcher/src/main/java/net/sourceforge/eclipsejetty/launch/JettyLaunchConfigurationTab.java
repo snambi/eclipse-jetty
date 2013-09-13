@@ -24,9 +24,9 @@ import java.util.List;
 import net.sourceforge.eclipsejetty.JettyPlugin;
 import net.sourceforge.eclipsejetty.JettyPluginConstants;
 import net.sourceforge.eclipsejetty.JettyPluginUtils;
+import net.sourceforge.eclipsejetty.common.ContainerConfig;
+import net.sourceforge.eclipsejetty.common.ContainerConfigType;
 import net.sourceforge.eclipsejetty.common.ContainerVersion;
-import net.sourceforge.eclipsejetty.jetty.JettyConfig;
-import net.sourceforge.eclipsejetty.jetty.JettyConfigType;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -300,8 +300,8 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
 
                 if (path != null)
                 {
-                    configEntryList.add(configTable, new JettyLaunchConfigEntry(new JettyConfig(path,
-                        JettyConfigType.WORKSPACE, true)));
+                    configEntryList.add(configTable, new JettyLaunchConfigEntry(new ContainerConfig(path,
+                        ContainerConfigType.WORKSPACE, true)));
                     updateLaunchConfigurationDialog();
                 }
             }
@@ -315,8 +315,8 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
 
                 if (path != null)
                 {
-                    configEntryList.add(configTable, new JettyLaunchConfigEntry(new JettyConfig(path,
-                        JettyConfigType.PATH, true)));
+                    configEntryList.add(configTable, new JettyLaunchConfigEntry(new ContainerConfig(path,
+                        ContainerConfigType.PATH, true)));
                     updateLaunchConfigurationDialog();
                 }
             }
@@ -332,7 +332,7 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
                 {
                     JettyLaunchConfigEntry entry = configEntryList.get(index);
 
-                    if ((entry.getType() == JettyConfigType.PATH) || (entry.getType() == JettyConfigType.WORKSPACE))
+                    if ((entry.getType() == ContainerConfigType.PATH) || (entry.getType() == ContainerConfigType.WORKSPACE))
                     {
                         configEntryList.remove(configTable, index);
                         updateLaunchConfigurationDialog();
@@ -585,9 +585,9 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
             return false;
         }
 
-        List<JettyConfig> contexts = configEntryList.getConfigs();
+        List<ContainerConfig> contexts = configEntryList.getConfigs();
 
-        for (JettyConfig context : contexts)
+        for (ContainerConfig context : contexts)
         {
             if (!context.isValid(ResourcesPlugin.getWorkspace()))
             {
@@ -650,7 +650,7 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
     {
         try
         {
-            List<JettyConfig> contexts = JettyPluginConstants.getConfigs(configuration);
+            List<ContainerConfig> contexts = JettyPluginConstants.getConfigs(configuration);
 
             if (configEntryList.update(configuration, configTable, contexts))
             {
@@ -796,12 +796,12 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
     {
         int index = configTable.getSelectionIndex();
         JettyLaunchConfigEntry entry = (index >= 0) ? configEntryList.get(index) : null;
-        JettyConfigType type = (entry != null) ? entry.getType() : null;
+        ContainerConfigType type = (entry != null) ? entry.getType() : null;
 
-        editConfigButton.setEnabled((type == JettyConfigType.PATH) || (type == JettyConfigType.WORKSPACE));
+        editConfigButton.setEnabled((type == ContainerConfigType.PATH) || (type == ContainerConfigType.WORKSPACE));
         moveUpConfigButton.setEnabled(index > 0);
         moveDownConfigButton.setEnabled((index >= 0) && (index < (configTable.getItemCount() - 1)));
-        removeConfigButton.setEnabled((type == JettyConfigType.PATH) || (type == JettyConfigType.WORKSPACE));
+        removeConfigButton.setEnabled((type == ContainerConfigType.PATH) || (type == ContainerConfigType.WORKSPACE));
     }
 
     public final class ModifyDialogListener implements ModifyListener, SelectionListener
