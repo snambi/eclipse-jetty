@@ -4,7 +4,9 @@ bin
 target
 reports
 .pmd
-*/.settings/com.springsource.server.ide.jdt.core.prefs
+*/.settings/*
+.settings/*
+.settings
 /tests/
 /coverage/
 /cobertura.ser
@@ -15,6 +17,7 @@ MANIFEST.MF
 *.bak
 */target/*
 /.idea/
-/.settings/
 **/*.iml
 /*.log
+.project
+.classpath
