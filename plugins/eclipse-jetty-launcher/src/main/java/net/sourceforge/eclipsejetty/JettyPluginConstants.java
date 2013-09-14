@@ -46,6 +46,7 @@ public class JettyPluginConstants
     public static final String  ATTR_CONTAINER_SELECTED = JettyPlugin.PLUGIN_ID + ".container.selected";
     public static final String  ATTR_CONTAINER_JETTY = JettyPlugin.PLUGIN_ID + ".container.jetty";
     public static final String  ATTR_CONTAINER_TOMCAT = JettyPlugin.PLUGIN_ID + ".container.tomcat";
+    public static final String 	ATTR_CONTAINER_VERSION = JettyPlugin.PLUGIN_ID + ".container.version";
     
     // tomcat specific constants
     private static final String ATTR_TOMCAT_PATH = JettyPlugin.PLUGIN_ID + ".tomcat.path";
@@ -256,12 +257,12 @@ public class JettyPluginConstants
 
     public static ContainerVersion getVersion(ILaunchConfiguration configuration) throws CoreException
     {
-        return ContainerVersion.valueOf(configuration.getAttribute(ATTR_JETTY_VERSION, ContainerVersion.JETTY_EMBEDDED.name()));
+        return ContainerVersion.valueOf(configuration.getAttribute(ATTR_CONTAINER_VERSION, ContainerVersion.JETTY_EMBEDDED.name()));
     }
 
-    public static void setVersion(ILaunchConfigurationWorkingCopy configuration, ContainerVersion jettyVersion)
+    public static void setVersion(ILaunchConfigurationWorkingCopy configuration, ContainerVersion containerVersion)
     {
-        configuration.setAttribute(ATTR_JETTY_VERSION, jettyVersion.name());
+        configuration.setAttribute(ATTR_CONTAINER_VERSION, containerVersion.name());
     }
 
     /**

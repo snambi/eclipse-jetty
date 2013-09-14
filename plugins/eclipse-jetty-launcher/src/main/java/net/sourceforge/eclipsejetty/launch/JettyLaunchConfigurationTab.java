@@ -470,6 +470,7 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
         		JettyPluginConstants.setTomcatPath(configuration, containerInstallDir);
         		ContainerVersion tomcatVersion = JettyPluginUtils.detectTomcatVersion(embedded, containerInstallDir);
         		JettyPluginConstants.setContainerMainTypeName(configuration, tomcatVersion);
+        		JettyPluginConstants.setVersion(configuration, tomcatVersion);
         	}
         	if( jettyselected == true ){
         		JettyPluginConstants.setJettyPath(configuration, containerInstallDir);

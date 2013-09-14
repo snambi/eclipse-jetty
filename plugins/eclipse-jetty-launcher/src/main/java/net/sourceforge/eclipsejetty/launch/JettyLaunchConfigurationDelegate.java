@@ -121,7 +121,7 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
     										String[] webappClasspath ) throws CoreException
     {
         final ContainerVersion tomcatVersion = JettyPluginConstants.getVersion(configuration);
-        File defaultFile = createJettyConfigurationFile(configuration, tomcatVersion, webappClasspath);
+        File defaultFile = createTomcatConfigurationFile(configuration, tomcatVersion, webappClasspath);
         
         String vmArguments = super.getVMArguments(configuration);
         vmArguments += " -D" + CONFIGURATION_KEY + "=" + getConfigurationParameter(configuration, defaultFile);
@@ -364,8 +364,9 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
         return vmClasspathMatcher;
     }
 
-    private File createJettyConfigurationFile(ILaunchConfiguration configuration, ContainerVersion version,
-        String[] classpath) throws CoreException
+    private File createJettyConfigurationFile(ILaunchConfiguration configuration, 
+    											ContainerVersion version,
+    											String[] classpath) throws CoreException
     {
         AbstractServerConfiguration serverConfiguration = version.createServerConfiguration();
 
@@ -390,6 +391,15 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
         }
 
         return file;
+    }
+    
+    private File createTomcatConfigurationFile(ILaunchConfiguration configuration, 
+			ContainerVersion version,
+			String[] classpath) throws CoreException{
+    	
+    	File file=null;
+    	return file;
+    	
     }
 
 }
