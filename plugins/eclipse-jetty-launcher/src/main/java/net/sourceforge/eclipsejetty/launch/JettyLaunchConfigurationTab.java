@@ -371,6 +371,24 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
             contextText.setText(JettyPluginConstants.getContext(configuration));
             portText.setText(JettyPluginConstants.getPort(configuration));
 
+            embeddedButton.setSelection(JettyPluginConstants.isEmbedded(configuration));
+            
+            String selectedContainer = JettyPluginConstants.getContainerSelected(configuration);
+            if( selectedContainer.equals(JettyPluginConstants.ATTR_CONTAINER_JETTY)){
+            	jettyButton.setSelection(true);
+            	tomcatButton.setSelection(false);
+            	if( embeddedButton.getSelection() == false ){
+            		containerPath.setText(JettyPluginConstants.getJettyPath(configuration));
+            	}
+            }
+            if( selectedContainer.equals(JettyPluginConstants.ATTR_CONTAINER_TOMCAT) ){
+            	tomcatButton.setSelection(true);
+            	jettyButton.setSelection(false);
+            	if( embeddedButton.getSelection() == false ){
+            		containerPath.setText(JettyPluginConstants.getTomcatPath(configuration));
+            	}
+            }
+
             updateTable(configuration, true);
             updateButtonState();
         }

@@ -9,38 +9,33 @@ public class Tomcat7ServerConfiguration extends AbstractServerConfiguration{
 
 	@Override
 	protected void buildThreadPool(DOMBuilder builder) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	protected void buildHttpConfig(DOMBuilder builder) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	protected List<String> getJNDIItems() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected void buildConnector(DOMBuilder builder) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	protected String getDefaultHandlerClass() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected void buildExtraOptions(DOMBuilder builder) {
-		// TODO Auto-generated method stub
-		
+		System.out.println("buildextraOptions");
+		System.out.println(builder);
 	}
 
 	@Override
@@ -54,5 +49,4 @@ public class Tomcat7ServerConfiguration extends AbstractServerConfiguration{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

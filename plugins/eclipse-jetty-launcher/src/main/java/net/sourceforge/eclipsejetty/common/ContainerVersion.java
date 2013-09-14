@@ -49,7 +49,7 @@ public enum ContainerVersion
     JETTY_9("net.sourceforge.eclipsejetty.starter.jetty9.Jetty9LauncherMain", "lib/eclipse-jetty-starters-jetty9.jar",
         Jetty9ServerConfiguration.class, new Jetty9LibStrategy()),
         
-    TOMCAT_7("","lib/eclipse-jetty-starters-tomcat7.jar",
+    TOMCAT_7("org.apache.catalina.startup.Bootstrap","lib/eclipse-jetty-starters-tomcat7.jar",
     		Tomcat7ServerConfiguration.class, new Tomcat7LibStrategy() );
 
     private final String mainClass;

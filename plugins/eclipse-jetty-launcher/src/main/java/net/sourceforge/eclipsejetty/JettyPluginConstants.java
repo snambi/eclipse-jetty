@@ -43,9 +43,9 @@ public class JettyPluginConstants
     private static final String ATTR_PORT = JettyPlugin.PLUGIN_ID + ".port";
     
     // constants for container selection
-    private static final String  ATTR_CONTAINER_SELECTED = JettyPlugin.PLUGIN_ID + ".container.selected";
-    private static final String  ATTR_CONTAINER_JETTY = JettyPlugin.PLUGIN_ID + ".container.jetty";
-    private static final String  ATTR_CONTAINER_TOMCAT = JettyPlugin.PLUGIN_ID + ".container.tomcat";
+    public static final String  ATTR_CONTAINER_SELECTED = JettyPlugin.PLUGIN_ID + ".container.selected";
+    public static final String  ATTR_CONTAINER_JETTY = JettyPlugin.PLUGIN_ID + ".container.jetty";
+    public static final String  ATTR_CONTAINER_TOMCAT = JettyPlugin.PLUGIN_ID + ".container.tomcat";
     
     // tomcat specific constants
     private static final String ATTR_TOMCAT_PATH = JettyPlugin.PLUGIN_ID + ".tomcat.path";

@@ -85,11 +85,28 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
         String[] webappClasspath =
             getLocalWebappClasspath(configuration,
                 getWebappClasspathEntries(configuration, getOriginalClasspathEntries(configuration)));
+        
+        // get the container type, version and config file location
+        String selectedContainer = JettyPluginConstants.getContainerSelected(configuration);
+        
+        String vmArguments=null;
+        if( selectedContainer.equals(JettyPluginConstants.ATTR_CONTAINER_JETTY) ){
+        	vmArguments = getVMArgumentsForJetty(configuration, webappClasspath);
+        }
+        if( selectedContainer.equals(JettyPluginConstants.ATTR_CONTAINER_TOMCAT) ){
+        	vmArguments = getVMArgumentsForTomcat(configuration, webappClasspath);
+        }
 
+        return vmArguments;
+    }
+    
+    public String getVMArgumentsForJetty( ILaunchConfiguration configuration, 
+    										String[] webappClasspath ) throws CoreException
+    {
         final ContainerVersion jettyVersion = JettyPluginConstants.getVersion(configuration);
         File defaultFile = createJettyConfigurationFile(configuration, jettyVersion, webappClasspath);
+        
         String vmArguments = super.getVMArguments(configuration);
-
         vmArguments += " -D" + CONFIGURATION_KEY + "=" + getConfigurationParameter(configuration, defaultFile);
 
         if (!JettyPluginConstants.isShowLauncherInfo(configuration))
@@ -98,6 +115,23 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
         }
 
         return vmArguments;
+    }
+    
+    public String getVMArgumentsForTomcat( ILaunchConfiguration configuration, 
+    										String[] webappClasspath ) throws CoreException
+    {
+        final ContainerVersion tomcatVersion = JettyPluginConstants.getVersion(configuration);
+        File defaultFile = createJettyConfigurationFile(configuration, tomcatVersion, webappClasspath);
+        
+        String vmArguments = super.getVMArguments(configuration);
+        vmArguments += " -D" + CONFIGURATION_KEY + "=" + getConfigurationParameter(configuration, defaultFile);
+
+        if (!JettyPluginConstants.isShowLauncherInfo(configuration))
+        {
+            vmArguments += " -D" + HIDE_LAUNCH_INFO_KEY;
+        }
+
+        return vmArguments;    	
     }
 
     private String getConfigurationParameter(ILaunchConfiguration configuration, File defaultFile) throws CoreException
