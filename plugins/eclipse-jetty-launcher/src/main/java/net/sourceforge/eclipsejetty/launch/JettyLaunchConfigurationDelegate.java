@@ -393,11 +393,46 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
         return file;
     }
     
+    /* Generates the context.xml file needed for deploying the application in tomcat.
+     * <code>
+     * <Context path="/mywebapp" docBase="/Users/theuser/mywebapp/src/main/webapp" >
+			<Resources className="org.apache.naming.resources.VirtualDirContext"
+				extraResourcePaths="/WEB-INF/classes=/Users/theuser/mywebapp/target/classes"/>
+			<Loader className="org.apache.catalina.loader.VirtualWebappLoader"
+				virtualClasspath="/Users/theuser/mywebapp/target/classes;/Users/theuser/mylib/target/classes;/Users/theuser/.m2/repository/log4j/log4j/1.2.15/log4j-1.2.15.jar"
+			/>
+			<JarScanner scanAllDirectories="true" />
+		</Context>
+     * </code>
+     */
     private File createTomcatConfigurationFile(ILaunchConfiguration configuration, 
-			ContainerVersion version,
-			String[] classpath) throws CoreException{
+												ContainerVersion version,
+												String[] classpath) throws CoreException{
     	
-    	File file=null;
+    	AbstractServerConfiguration serverConfiguration = version.createServerConfiguration();
+    	
+    	String tomcatPath = JettyPluginConstants.getTomcatPath(configuration);
+    	
+    	File file = new File( tomcatPath , "conf/Catalina/localhost/piejet.xml");
+    	
+    	// if the file exists, rewrite it
+    	if( file.exists() ){
+    		file.delete();
+    	}
+
+    	serverConfiguration.setDefaultContextPath(JettyPluginConstants.getContext(configuration));
+    	serverConfiguration.setDefaultWar(JettyPluginConstants.getWebAppDir(configuration));
+    	serverConfiguration.addDefaultClasspath(classpath);
+    	
+    	// TODO: Port number, Jndi, Catalina_base and additional features
+    	
+    	try {
+			serverConfiguration.write(file);
+		} catch (IOException e) {
+			throw new CoreException( new Status(IStatus.ERROR, JettyPlugin.PLUGIN_ID,
+										"Failed to write tomcat context file at "+ file.getAbsolutePath() ));
+		}
+    	
     	return file;
     	
     }
