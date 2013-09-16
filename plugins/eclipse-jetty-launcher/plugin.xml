@@ -26,7 +26,7 @@
          point="org.eclipse.debug.ui.launchConfigurationTypeImages">
       <launchConfigurationTypeImage
             configTypeID="net.sourceforge.eclipsejetty.launchConfigurationType"
-            icon="icons/jetty.png"
+            icon="icons/piejet-icon.png"
             id="net.sourceforge.eclipsejetty.launchConfigurationType.image">
       </launchConfigurationTypeImage>
    </extension>

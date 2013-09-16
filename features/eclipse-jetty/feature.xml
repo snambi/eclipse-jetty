@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="net.sourceforge.eclipsejetty.feature"
-      label="Eclipse Jetty Feature"
+      label="PieJet Feature"
       version="3.5.1.qualifier"
-      provider-name="Christian Köberl">
+      provider-name="Christian Köberl, Nambi Sankaran">
 
    <description url="http://eclipse-jetty.sourceforge.net/">
-      Eclipse Jetty Integration
+      PIEJET - Plug IdEs into JEtty and Tomcat
    </description>
 
    <copyright>
@@ -28,7 +28,7 @@ limitations under the License.
    </license>
 
    <url>
-      <update label="Eclipse Jetty Update Site" url="http://eclipse-jetty.sourceforge.net/update/"/>
+      <update label="PieJet Update Site" url="http://eclipse-jetty.sourceforge.net/update/"/>
    </url>
 
    <plugin

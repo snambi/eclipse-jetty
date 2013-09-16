@@ -82,9 +82,12 @@ public class JettyPlugin extends AbstractUIPlugin
     @Override
     protected void initializeImageRegistry(final ImageRegistry reg)
     {
-        initializeImageRegistry(reg, JETTY_ICON, "/icons/jetty.png");
-        initializeImageRegistry(reg, JETTY_ADVANCED_ICON, "/icons/jetty-advanced.png");
+//        initializeImageRegistry(reg, JETTY_ICON, "/icons/jetty.png");
+//        initializeImageRegistry(reg, JETTY_ADVANCED_ICON, "/icons/jetty-advanced.png");
 
+        initializeImageRegistry(reg, JETTY_ICON, "/icons/piejet-icon.png");
+        initializeImageRegistry(reg, JETTY_ADVANCED_ICON, "/icons/piejet-icon.png");
+        
         initializeImageRegistry(reg, ADD_CONTEXT_ICON, "/icons/add_context.gif");
         initializeImageRegistry(reg, REMOVE_CONTEXT_ICON, "/icons/remove_context.gif");
         initializeImageRegistry(reg, MOVE_UP_CONTEXT_ICON, "/icons/move_up_context.gif");

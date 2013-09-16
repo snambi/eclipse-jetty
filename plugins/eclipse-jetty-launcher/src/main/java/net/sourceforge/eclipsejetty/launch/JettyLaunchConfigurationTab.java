@@ -426,7 +426,7 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
         if ((launchConfigName == null) || (launchConfigName.length() == 0))
         {
             // if no project name was found, base on a default name
-            launchConfigName = "Jetty Webapp";
+            launchConfigName = "Java Servlet Webapp";
         }
 
         // generate an unique name (e.g. myproject(2))
