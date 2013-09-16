@@ -82,7 +82,8 @@ public class Tomcat7ServerConfiguration extends AbstractServerConfiguration{
         }
         
         builder.begin("Context");
-        builder.attribute("docBase", getDefaultWar()).attribute("path", contextPath);
+        builder.attribute("docBase", getDefaultWar());
+        builder.attribute("path", contextPath);
         buildContent(builder);
         builder.end();
 
@@ -92,14 +93,18 @@ public class Tomcat7ServerConfiguration extends AbstractServerConfiguration{
     @Override
     protected void buildContent(DOMBuilder builder)
     {
-    	builder.begin("Resources");
-    	builder.attribute("className", "org.apache.naming.resources.VirtualDirContext");
-    	builder.attribute("extraResourcePaths", getDefaultWar());
-    	builder.end();
+//    	builder.begin("Resources");
+//    	builder.attribute("className", "org.apache.naming.resources.VirtualDirContext");
+//    	builder.attribute("extraResourcePaths", getDefaultWar());
+//    	builder.end();
     	
     	builder.begin("Loader");
     	builder.attribute("className", "org.apache.catalina.loader.VirtualWebappLoader");
     	builder.attribute("virtualClasspath", link(getDefaultClasspath() ));
+    	builder.end();
+    	
+    	builder.begin("JarScanner");
+    	builder.attribute("scanAllDirectories", "true");
     	builder.end();
     }
     

@@ -45,10 +45,10 @@
 	</scm>
 
 	<modules>
+		<module>starters</module>
 		<module>plugins/eclipse-jetty-launcher</module>
 		<module>features/eclipse-jetty</module>
 		<module>site</module>
-		<module>starters</module>
 	</modules>
 
 	<build>

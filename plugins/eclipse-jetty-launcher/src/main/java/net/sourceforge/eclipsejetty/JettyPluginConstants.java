@@ -94,7 +94,18 @@ public class JettyPluginConstants
     
     public static void setContainerTomcat( ILaunchConfigurationWorkingCopy configuration) {
     	configuration.setAttribute(ATTR_CONTAINER_SELECTED, ATTR_CONTAINER_TOMCAT);
-    }  
+    }
+    
+    /**
+     * This sets the program arguments.
+     * Typically what goes into the "args" of the "main(String[] args )" method.
+     * 
+     * @param configuration
+     * @param argument
+     */
+    public static void setContainerArguments( ILaunchConfigurationWorkingCopy configuration, String argument ){
+    	configuration.setAttribute( IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, argument );
+    }
     
     
     /**

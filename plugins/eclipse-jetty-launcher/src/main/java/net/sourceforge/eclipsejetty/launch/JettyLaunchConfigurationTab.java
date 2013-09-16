@@ -471,6 +471,7 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
         		ContainerVersion tomcatVersion = JettyPluginUtils.detectTomcatVersion(embedded, containerInstallDir);
         		JettyPluginConstants.setContainerMainTypeName(configuration, tomcatVersion);
         		JettyPluginConstants.setVersion(configuration, tomcatVersion);
+        		JettyPluginConstants.setContainerArguments(configuration, "start");
         	}
         	if( jettyselected == true ){
         		JettyPluginConstants.setJettyPath(configuration, containerInstallDir);
@@ -481,7 +482,8 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
                         JettyPluginUtils.detectJettyVersion(embedded, JettyPluginUtils.resolveVariables(containerInstallDir));
 
                     JettyPluginConstants.setContainerMainTypeName(configuration, jettyVersion);
-                    JettyPluginConstants.setVersion(configuration, jettyVersion);
+                    JettyPluginConstants.setVersion(configuration, jettyVersion);                
+                   
                 }
                 catch (IllegalArgumentException e)
                 {
@@ -491,8 +493,6 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
         	}
         }
         
-
-
         
         try
         {

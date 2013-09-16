@@ -9,7 +9,7 @@
 		<version>3.5.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>eclipse-tomcat7-starters</artifactId>
+	<artifactId>eclipse-jetty-starters-tomcat7</artifactId>
 	<name>Eclipse Tomcat7 Launcher Starters</name>
 
 	<properties>

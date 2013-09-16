@@ -40,12 +40,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaLaunchDelegate;
 import org.eclipse.jdt.launching.JavaRuntime;
@@ -124,7 +126,15 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
         File defaultFile = createTomcatConfigurationFile(configuration, tomcatVersion, webappClasspath);
         
         String vmArguments = super.getVMArguments(configuration);
-        vmArguments += " -D" + CONFIGURATION_KEY + "=" + getConfigurationParameter(configuration, defaultFile);
+        //vmArguments += " -D" + CONFIGURATION_KEY + "=" + getConfigurationParameter(configuration, defaultFile);
+        
+        String tomcatPath = JettyPluginConstants.getTomcatPath(configuration);
+        vmArguments += " -Djava.util.logging.config.file=" + tomcatPath + File.separator + "conf" + File.separator + "logging.properties";
+        vmArguments += " -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager";
+        vmArguments += " -Djava.endorsed.dirs="+ tomcatPath + File.separator + "endorsed";
+        vmArguments += " -Dcatalina.home=" + tomcatPath;
+        vmArguments += " -Dcataliba.base=" + tomcatPath;
+        vmArguments += " -Djava.io.tmpdir=" + tomcatPath + File.separator + "temp";
 
         if (!JettyPluginConstants.isShowLauncherInfo(configuration))
         {
@@ -167,7 +177,7 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
     @Override
     public String[] getClasspath(ILaunchConfiguration configuration) throws CoreException
     {
-        return JettyPluginUtils.toLocationArray(getJettyClasspath(
+        return JettyPluginUtils.toLocationArray(getContainerClasspath(
             configuration,
             getGlobalWebappClasspathEntries(configuration,
                 getWebappClasspathEntries(configuration, getOriginalClasspathEntries(configuration)))));
@@ -265,8 +275,9 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
         return JettyPluginUtils.toLocationArray(getGlobalWebappClasspathEntries(configuration, webappEntries));
     }
 
-    private static IRuntimeClasspathEntry[] getJettyClasspath(final ILaunchConfiguration configuration,
-        final Collection<IRuntimeClasspathEntry> collection) throws CoreException
+    private static IRuntimeClasspathEntry[] getContainerClasspath(final ILaunchConfiguration configuration,
+    																final Collection<IRuntimeClasspathEntry> collection) 
+    																		throws CoreException
     {
         final List<IRuntimeClasspathEntry> entries = new ArrayList<IRuntimeClasspathEntry>();
 
@@ -275,7 +286,18 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
             entries.addAll(collection);
         }
 
-        final String jettyPath = JettyPluginUtils.resolveVariables(JettyPluginConstants.getJettyPath(configuration));
+       
+        // first detect the container
+         String containerPath=null;
+        String selectedContainer = JettyPluginConstants.getContainerSelected(configuration);
+        if( selectedContainer.equals(JettyPluginConstants.ATTR_CONTAINER_JETTY) ){
+        	containerPath = JettyPluginUtils.resolveVariables(JettyPluginConstants.getJettyPath(configuration));
+        }
+        else if( selectedContainer.equals(JettyPluginConstants.ATTR_CONTAINER_TOMCAT) ){
+        	containerPath = JettyPluginUtils.resolveVariables(JettyPluginConstants.getTomcatPath(configuration));
+        }
+        
+         
         final ContainerVersion jettyVersion = JettyPluginConstants.getVersion(configuration);
         boolean jspSupport = JettyPluginConstants.isJspSupport(configuration);
         boolean jmxSupport = JettyPluginConstants.isJmxSupport(configuration);
@@ -299,11 +321,21 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
 //                FileLocator.find(JettyPlugin.getDefault().getBundle(),
 //                    Path.fromOSString("lib/eclipse-jetty-starters-common.jar"), null)).getFile())));
 
-            entries.add(JavaRuntime.newArchiveRuntimeClasspathEntry(new Path(FileLocator.toFileURL(
-                FileLocator.find(JettyPlugin.getDefault().getBundle(), Path.fromOSString(jettyVersion.getJar()), null))
-                .getFile())));
+        	
+        	URL iurl = FileLocator.find(
+        				JettyPlugin.getDefault().getBundle(), 
+					  	Path.fromOSString(jettyVersion.getJar()), 
+					  	null);
+        	URL furl = FileLocator.toFileURL(iurl);
+        	Path path1 = new Path( furl.getFile() );
+        	IRuntimeClasspathEntry cpentry = JavaRuntime.newArchiveRuntimeClasspathEntry(path1);
+        	entries.add( cpentry);
+        	
+//            entries.add(JavaRuntime.newArchiveRuntimeClasspathEntry(new Path(FileLocator.toFileURL(
+//                FileLocator.find(JettyPlugin.getDefault().getBundle(), Path.fromOSString(jettyVersion.getJar()), null))
+//                .getFile())));
 
-            for (final File jettyLib : jettyVersion.getLibStrategy().find(new File(jettyPath), jspSupport, jmxSupport,
+            for (final File jettyLib : jettyVersion.getLibStrategy().find(new File(containerPath), jspSupport, jmxSupport,
                 jndiSupport, ajpSupport))
             {
                 entries.add(JavaRuntime.newArchiveRuntimeClasspathEntry(new Path(jettyLib.getCanonicalPath())));
@@ -408,20 +440,40 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
     private File createTomcatConfigurationFile(ILaunchConfiguration configuration, 
 												ContainerVersion version,
 												String[] classpath) throws CoreException{
+   
+    	
     	
     	AbstractServerConfiguration serverConfiguration = version.createServerConfiguration();
     	
     	String tomcatPath = JettyPluginConstants.getTomcatPath(configuration);
     	
-    	File file = new File( tomcatPath , "conf/Catalina/localhost/piejet.xml");
+    	// the file name is the name of the context
+    	String contextPath = JettyPluginConstants.getContext(configuration);
+    	if( contextPath != null && !contextPath.trim().equals("")){
+    		if( contextPath.trim().equals("/") ||
+    				contextPath.trim().toLowerCase().equals("/root") ||
+    				contextPath.trim().toLowerCase().equals("root") ){
+    			contextPath = "ROOT";
+    		}
+    		
+    	}else{
+    		contextPath = "ROOT";
+    	}
+    	
+    	File file = new File( tomcatPath , "conf/Catalina/localhost/" + contextPath + ".xml");
     	
     	// if the file exists, rewrite it
     	if( file.exists() ){
     		file.delete();
     	}
+    	
+    	// get absolute path for webapp folder.
+    	// TODO: fix this. this should be derived from project root, not from working dir path
+    	String path = getWorkingDirectory(configuration).getAbsolutePath();
+    	File webappdir = new File( path, JettyPluginConstants.getWebAppDir(configuration) );
 
     	serverConfiguration.setDefaultContextPath(JettyPluginConstants.getContext(configuration));
-    	serverConfiguration.setDefaultWar(JettyPluginConstants.getWebAppDir(configuration));
+    	serverConfiguration.setDefaultWar( webappdir.getAbsolutePath());
     	serverConfiguration.addDefaultClasspath(classpath);
     	
     	// TODO: Port number, Jndi, Catalina_base and additional features
