@@ -478,16 +478,15 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
     	}
     	
     	// get absolute path for webapp folder.
-    	// TODO: fix this. this should be derived from project root, not from working dir path
-    	String path = getWorkingDirectory(configuration).getAbsolutePath();
-    	File webappdir = new File( path, JettyPluginConstants.getWebAppDir(configuration) );
-    	
-    	
+//    	// TODO: fix this. this should be derived from project root, not from working dir path
+//    	String path = getWorkingDirectory(configuration).getAbsolutePath();
     	IJavaProject project = getJavaProject(configuration);
     	String projectname = getResourceUri(project.getResource());
     	
-    	
     	String projectRoot =  project.getResource().getLocation().toString();
+    	File webappdir = new File( projectRoot, JettyPluginConstants.getWebAppDir(configuration) );
+    	
+    	
     	String outputFolder =  project.getOutputLocation().makeAbsolute().toString(); 
     	String outputDir = null;
     	if( outputFolder.startsWith(projectname) ){
