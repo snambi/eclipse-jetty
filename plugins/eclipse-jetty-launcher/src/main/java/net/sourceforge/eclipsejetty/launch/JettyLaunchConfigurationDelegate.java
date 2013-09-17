@@ -36,6 +36,7 @@ import net.sourceforge.eclipsejetty.common.AbstractServerConfiguration;
 import net.sourceforge.eclipsejetty.common.ContainerConfig;
 import net.sourceforge.eclipsejetty.common.ContainerVersion;
 
+import org.eclipse.core.internal.utils.FileUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -124,18 +125,23 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
     										String[] webappClasspath ) throws CoreException
     {
         final ContainerVersion tomcatVersion = JettyPluginConstants.getVersion(configuration);
-        File defaultFile = createTomcatConfigurationFile(configuration, tomcatVersion, webappClasspath);
+        String catalinaHome = JettyPluginConstants.getTomcatPath(configuration);
+        
+        //String catalinaBase = getCatalinaHomeForProject(configuration);
+        //createCatalinaHomeStructure(catalinaHome, catalinaBase);
+        
+        File defaultFile = createTomcatConfigurationFile(configuration, tomcatVersion, catalinaHome, webappClasspath);
         
         String vmArguments = super.getVMArguments(configuration);
         //vmArguments += " -D" + CONFIGURATION_KEY + "=" + getConfigurationParameter(configuration, defaultFile);
         
-        String tomcatPath = JettyPluginConstants.getTomcatPath(configuration);
-        vmArguments += " -Djava.util.logging.config.file=" + tomcatPath + File.separator + "conf" + File.separator + "logging.properties";
+        
+        vmArguments += " -Djava.util.logging.config.file=" + catalinaHome + File.separator + "conf" + File.separator + "logging.properties";
         vmArguments += " -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager";
-        vmArguments += " -Djava.endorsed.dirs="+ tomcatPath + File.separator + "endorsed";
-        vmArguments += " -Dcatalina.home=" + tomcatPath;
-        vmArguments += " -Dcataliba.base=" + tomcatPath;
-        vmArguments += " -Djava.io.tmpdir=" + tomcatPath + File.separator + "temp";
+        vmArguments += " -Djava.endorsed.dirs="+ catalinaHome + File.separator + "endorsed";
+        vmArguments += " -Dcatalina.home=" + catalinaHome;
+        vmArguments += " -Dcatalina.base=" + catalinaHome;
+        vmArguments += " -Djava.io.tmpdir=" + catalinaHome + File.separator + "temp";
 
         if (!JettyPluginConstants.isShowLauncherInfo(configuration))
         {
@@ -143,6 +149,61 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
         }
 
         return vmArguments;    	
+    }
+    
+    public  String getCatalinaHomeForProject( ILaunchConfiguration configuration ) 
+    		throws CoreException{
+    	
+        // calculate "catalina.base" dir to be located under $project_root/target/catalina.base
+    	IJavaProject project = getJavaProject(configuration);
+    	String projectRoot =  project.getResource().getLocation().toString();
+    	
+    	//  outputDir should be equal to "target/classes", then remove "classes" folder
+    	
+    	String catalinaBase = projectRoot + File.separator + "target" + File.separator + "catalina.base";
+    	
+    	File cbase = new File(catalinaBase);
+    	if( cbase.exists() ){
+    		cbase.delete();
+    	}
+    	if( !cbase.exists()){
+    		cbase.mkdirs();
+    	}
+    	
+    	return catalinaBase;
+    }
+    
+    public void createCatalinaHomeStructure( String catalinaHome, String catalinaBase)
+    {
+    	
+    	if( catalinaBase != null && !catalinaBase.trim().equals("")){
+    		File cbase = new File(catalinaBase);
+    		
+    		File conf = new File(cbase, "conf");
+    		if( !conf.exists()){
+    			conf.mkdirs();
+    		}
+    		
+    		File logs = new File(cbase, "logs");
+    		if( !logs.exists() ){
+    			logs.mkdirs();
+    		}
+    		
+    		File temp = new File(cbase, "temp");
+    		if( !temp.exists() ){
+    			temp.mkdirs();
+    		}
+    		
+    		File work = new File(cbase, "work");
+    		if( !work.exists() ){
+    			work.mkdirs();
+    		}
+    		
+    		File webapps = new File( cbase, "webapps");
+    		if( webapps.exists() ){
+    			webapps.mkdirs();
+    		}
+    	}
     }
 
     private String getConfigurationParameter(ILaunchConfiguration configuration, File defaultFile) throws CoreException
@@ -440,13 +501,12 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
      */
     private File createTomcatConfigurationFile(ILaunchConfiguration configuration, 
 												ContainerVersion version,
+												String catalinaBase,
 												String[] classpath) throws CoreException{
    
     	
     	
     	AbstractServerConfiguration serverConfiguration = version.createServerConfiguration();
-    	
-    	String tomcatPath = JettyPluginConstants.getTomcatPath(configuration);
     	
     	// the file name is the name of the context
     	String contextPath = JettyPluginConstants.getContext(configuration);
@@ -465,7 +525,7 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
     		contextPath = "ROOT";
     	}
     	
-    	File file = new File( tomcatPath , "conf/Catalina/localhost/" + contextPath + ".xml");
+    	File file = new File( catalinaBase , "conf/Catalina/localhost/" + contextPath + ".xml");
     	
     	// if the file exists, rewrite it
     	if( file.exists() ){
@@ -478,11 +538,8 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
     	}
     	
     	// get absolute path for webapp folder.
-//    	// TODO: fix this. this should be derived from project root, not from working dir path
-//    	String path = getWorkingDirectory(configuration).getAbsolutePath();
     	IJavaProject project = getJavaProject(configuration);
     	String projectname = getResourceUri(project.getResource());
-    	
     	String projectRoot =  project.getResource().getLocation().toString();
     	File webappdir = new File( projectRoot, JettyPluginConstants.getWebAppDir(configuration) );
     	
