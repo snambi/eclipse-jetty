@@ -372,6 +372,7 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
             portText.setText(JettyPluginConstants.getPort(configuration));
 
             embeddedButton.setSelection(JettyPluginConstants.isEmbedded(configuration));
+            externButton.setSelection( !JettyPluginConstants.isEmbedded(configuration));
             
             String selectedContainer = JettyPluginConstants.getContainerSelected(configuration);
             if( selectedContainer.equals(JettyPluginConstants.ATTR_CONTAINER_JETTY)){
@@ -462,35 +463,39 @@ public class JettyLaunchConfigurationTab extends AbstractJettyLaunchConfiguratio
     	boolean embedded = embeddedButton.getSelection();
         JettyPluginConstants.setEmbedded(configuration, embedded);
 
+        boolean external = externButton.getSelection();
+        
         // detect whether external container is used or not
-        String containerInstallDir = containerPath.getText().trim();
-        if( containerInstallDir != null && !containerInstallDir.trim().equals("")){
-        	        	
-        	if( tomcatselected == true){
-        		JettyPluginConstants.setTomcatPath(configuration, containerInstallDir);
-        		ContainerVersion tomcatVersion = JettyPluginUtils.detectTomcatVersion(embedded, containerInstallDir);
-        		JettyPluginConstants.setContainerMainTypeName(configuration, tomcatVersion);
-        		JettyPluginConstants.setVersion(configuration, tomcatVersion);
-        		JettyPluginConstants.setContainerArguments(configuration, "start");
-        	}
-        	if( jettyselected == true ){
-        		JettyPluginConstants.setJettyPath(configuration, containerInstallDir);
-        		
-                try
-                {
-                    ContainerVersion jettyVersion =
-                        JettyPluginUtils.detectJettyVersion(embedded, JettyPluginUtils.resolveVariables(containerInstallDir));
-
-                    JettyPluginConstants.setContainerMainTypeName(configuration, jettyVersion);
-                    JettyPluginConstants.setVersion(configuration, jettyVersion);                
-                   
-                }
-                catch (IllegalArgumentException e)
-                {
-                    // failed to detect
-                }
-                
-        	}
+        if( external == true ){
+	        String containerInstallDir = containerPath.getText().trim();
+	        if( containerInstallDir != null && !containerInstallDir.trim().equals("")){
+	        	        	
+	        	if( tomcatselected == true){
+	        		JettyPluginConstants.setTomcatPath(configuration, containerInstallDir);
+	        		ContainerVersion tomcatVersion = JettyPluginUtils.detectTomcatVersion(embedded, containerInstallDir);
+	        		JettyPluginConstants.setContainerMainTypeName(configuration, tomcatVersion);
+	        		JettyPluginConstants.setVersion(configuration, tomcatVersion);
+	        		JettyPluginConstants.setContainerArguments(configuration, "start");
+	        	}
+	        	if( jettyselected == true ){
+	        		JettyPluginConstants.setJettyPath(configuration, containerInstallDir);
+	        		
+	                try
+	                {
+	                    ContainerVersion jettyVersion =
+	                        JettyPluginUtils.detectJettyVersion(embedded, JettyPluginUtils.resolveVariables(containerInstallDir));
+	
+	                    JettyPluginConstants.setContainerMainTypeName(configuration, jettyVersion);
+	                    JettyPluginConstants.setVersion(configuration, jettyVersion);                
+	                   
+	                }
+	                catch (IllegalArgumentException e)
+	                {
+	                    // failed to detect
+	                }
+	                
+	        	}
+	        }
         }
         
         

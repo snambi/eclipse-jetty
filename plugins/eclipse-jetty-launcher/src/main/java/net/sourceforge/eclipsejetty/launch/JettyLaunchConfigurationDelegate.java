@@ -37,6 +37,7 @@ import net.sourceforge.eclipsejetty.common.ContainerConfig;
 import net.sourceforge.eclipsejetty.common.ContainerVersion;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
@@ -456,6 +457,10 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
     			contextPath = "ROOT";
     		}
     		
+    		if( contextPath.startsWith("/")){
+    			contextPath = contextPath.substring(1);
+    		}
+    		
     	}else{
     		contextPath = "ROOT";
     	}
@@ -466,15 +471,37 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
     	if( file.exists() ){
     		file.delete();
     	}
+    	// check if the parent dirs exist
+    	File parentDirs = file.getParentFile();
+    	if( !parentDirs.exists()){
+    		parentDirs.mkdirs();
+    	}
     	
     	// get absolute path for webapp folder.
     	// TODO: fix this. this should be derived from project root, not from working dir path
     	String path = getWorkingDirectory(configuration).getAbsolutePath();
     	File webappdir = new File( path, JettyPluginConstants.getWebAppDir(configuration) );
-
+    	
+    	
+    	IJavaProject project = getJavaProject(configuration);
+    	String projectname = getResourceUri(project.getResource());
+    	
+    	
+    	String projectRoot =  project.getResource().getLocation().toString();
+    	String outputFolder =  project.getOutputLocation().makeAbsolute().toString(); 
+    	String outputDir = null;
+    	if( outputFolder.startsWith(projectname) ){
+    		outputDir = outputFolder.substring(projectname.length());
+    	}else{
+    		outputDir = outputFolder;
+    	}
+    	
+    	String absOutDir = projectRoot + outputDir;
+    	
     	serverConfiguration.setDefaultContextPath(JettyPluginConstants.getContext(configuration));
     	serverConfiguration.setDefaultWar( webappdir.getAbsolutePath());
     	serverConfiguration.addDefaultClasspath(classpath);
+    	serverConfiguration.setOutputFolder(absOutDir);
     	
     	// TODO: Port number, Jndi, Catalina_base and additional features
     	
@@ -488,5 +515,28 @@ public class JettyLaunchConfigurationDelegate extends JavaLaunchDelegate
     	return file;
     	
     }
+    
+    
+    
+	public String getResourceUri(IResource resource) {
+
+		String resourceName = resource.getName();
+		IPath parentPath = resource.getParent().getProjectRelativePath();
+
+		String[] segments = parentPath.segments();
+		StringBuilder sb = new StringBuilder();
+		sb.append("/");
+		if (segments.length > 1) {
+
+			for (int idx = 1; idx < segments.length; idx++) {
+				sb.append(segments[idx]);
+				sb.append("/");
+			}
+		}
+		sb.append(resourceName);
+		return sb.toString().substring(0, sb.toString().length());
+	}
+
+    
 
 }

@@ -21,6 +21,8 @@ public abstract class AbstractServerConfiguration extends AbstractConfiguration
 {
 
     private final Collection<String> defaultClasspath;
+    
+    private String outputFolder;
 
     private boolean jndi = false;
     private Integer port;
@@ -36,7 +38,15 @@ public abstract class AbstractServerConfiguration extends AbstractConfiguration
         defaultClasspath = new LinkedHashSet<String>();
     }
 
-    public boolean isJndi()
+    public String getOutputFolder() {
+		return outputFolder;
+	}
+
+	public void setOutputFolder(String outputFolder) {
+		this.outputFolder = outputFolder;
+	}
+
+	public boolean isJndi()
     {
         return jndi;
     }

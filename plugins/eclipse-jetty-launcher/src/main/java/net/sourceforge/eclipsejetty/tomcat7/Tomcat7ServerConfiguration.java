@@ -9,6 +9,16 @@ import net.sourceforge.eclipsejetty.common.AbstractServerConfiguration;
 import net.sourceforge.eclipsejetty.util.DOMBuilder;
 
 public class Tomcat7ServerConfiguration extends AbstractServerConfiguration{
+	
+	private String outputFolder;
+
+	public String getOutputFolder() {
+		return outputFolder;
+	}
+
+	public void setOutputFolder(String outputFolder) {
+		this.outputFolder = outputFolder;
+	}
 
 	@Override
 	protected void buildThreadPool(DOMBuilder builder) {
@@ -97,6 +107,11 @@ public class Tomcat7ServerConfiguration extends AbstractServerConfiguration{
 //    	builder.attribute("className", "org.apache.naming.resources.VirtualDirContext");
 //    	builder.attribute("extraResourcePaths", getDefaultWar());
 //    	builder.end();
+    	
+    	builder.begin("Resources");
+    	builder.attribute("className", "org.apache.naming.resources.VirtualDirContext");
+    	builder.attribute("extraResourcePaths", "WEB-INF/classes="+ getOutputFolder());
+    	builder.end();
     	
     	builder.begin("Loader");
     	builder.attribute("className", "org.apache.catalina.loader.VirtualWebappLoader");
